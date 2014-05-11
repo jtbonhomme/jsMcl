@@ -25,6 +25,7 @@
         var theCanvas     = document.getElementById("canvas");
         var context       = theCanvas.getContext("2d");
         var graph, start, end;
+        var grid = [];
 
         function getMousePos(canvas, evt) {
           var rect = canvas.getBoundingClientRect();
@@ -38,7 +39,10 @@
           var mousePos = getMousePos(theCanvas, evt);
           var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
           console.log(message);
-          if( typeof start === "undefined" || start === null) {
+          if( grid[mousePos.y][mousePos.x] !== 1 ) {
+            alert("you shall pick a walkable point");
+          }
+          else if( typeof start === "undefined" || start === null) {
             start = graph.nodes[mousePos.y][mousePos.x];
           } else if( typeof end === "undefined"  || end === null) {
             end = graph.nodes[mousePos.y][mousePos.x];
@@ -50,7 +54,7 @@
         // map shall be a 500x500 picture
         // walkable colors shall be coded as white (color="#ffffff")
         // any other color than white is considered as not walkable
-        map.src = "map2.png";
+        map.src = "map3.png";
         map.addEventListener('load', eventSheetLoaded , false);
         function eventSheetLoaded() {
           console.log("image loaded");
@@ -72,9 +76,8 @@
           // A separate byte is used to store each of the red, green, blue, and alpha values for each pixel.
           // Here, a 500x500 pixmap means 500x500x4=1M bytes array.
           var pix = imageData.data;
-          // walkable cells are coded as 0
-          // walls and obstacles are coded as 1
-          var grid = [];
+          // walkable cells are coded as 1
+          // walls and obstacles are coded as 0
           for( var row = 0; row < canvasHeight; row++) {
             var aRow = [];
             for (var col = 0 ; col < canvasWidth; col++) {
