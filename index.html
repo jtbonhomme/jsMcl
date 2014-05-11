@@ -24,6 +24,7 @@
         var canvasHeight  = 558;
         var theCanvas     = document.getElementById("canvas");
         var context       = theCanvas.getContext("2d");
+        var graph, start, end;
 
         function getMousePos(canvas, evt) {
           var rect = canvas.getBoundingClientRect();
@@ -36,17 +37,14 @@
         function mouseClick(evt) {
           var mousePos = getMousePos(theCanvas, evt);
           var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-          console.log(message);          
-        }
-
-        theCanvas.addEventListener('mousedown', mouseClick, false);
-/*
-        theCanvas.addEventListener('mousedown', function(evt) {
-          var mousePos = getMousePos(theCanvas, evt);
-          var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
           console.log(message);
-        }, false);
-*/
+          if( typeof start === "undefined" ) {
+            start = graph.nodes[mousePos.y][mousePos.x];
+          } else if( typeof end === "undefined" ) {
+            end = graph.nodes[mousePos.y][mousePos.x];
+            searchPath();
+          }
+        }
 
         var map = new Image();
         // map.png shall be a 500x500 picture
@@ -58,6 +56,7 @@
         function eventSheetLoaded() {
           console.log("image loaded");
           drawScreen();
+          theCanvas.addEventListener('mousedown', mouseClick, false);
         }
 
         function drawScreen() {
@@ -108,19 +107,17 @@
                       [1, 1, 1, 1, 1, 0, 1],
                       [1, 1, 1, 1, 1, 0, 1]]; // row 10
 */
+          graph = new Graph(grid);
+        }
 
-
-          var graph = new Graph(grid);
+        function searchPath() {
           // todo: get start and end from mouse pointing
-          var start = graph.nodes[453][104];
-          var end = graph.nodes[59][309];
           console.log("calculate path, please wait ...");
           var before = Date.now();
           var result = astar.search(graph.nodes, start, end, false);
-          var after = Date.now();
-          // result now searches diagonal neighbors as well
           // result.x = row
           // result.y = col
+          var after = Date.now();
           console.log("done in " + (after - before) + " ms");
 
           // show path in red
