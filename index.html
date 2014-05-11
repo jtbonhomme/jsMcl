@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	<meta charset="UTF-8">
+    <title>jsMcl</title>
+	</head>
+	<body>
+    <div style="position: absolute; top: 50px; left: 50px;">
+      <canvas id="canvas" width="500" height="558">
+        Your browser does not support HTML5 Canvas.
+      </canvas>
+    </div>
+
+    <script type="text/javascript">
+
+      window.addEventListener('load', eventWindowLoaded, false);
+      function eventWindowLoaded() {
+        console.log("start");
+        canvasApp();
+      }
+  
+      function canvasApp(){
+        var canvasWidth   = 500;
+        var canvasHeight  = 558;
+        var theCanvas     = document.getElementById("canvas");
+        var context       = theCanvas.getContext("2d");
+
+        function getMousePos(canvas, evt) {
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
+          };
+        }
+
+        function mouseClick(evt) {
+          var mousePos = getMousePos(theCanvas, evt);
+          var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+          console.log(message);          
+        }
+
+        theCanvas.addEventListener('mousedown', mouseClick, false);
+/*
+        theCanvas.addEventListener('mousedown', function(evt) {
+          var mousePos = getMousePos(theCanvas, evt);
+          var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+          console.log(message);
+        }, false);
+*/
+
+        var map = new Image();
+        // map.png shall be a 500x500 picture
+        // walkable color shall be coded as color="#ffffff"
+        // walls shall be coded as color="#000000"
+        // in practical, all colors differents from white are not walkables
+        map.src = "map2.png";
+        map.addEventListener('load', eventSheetLoaded , false);
+        function eventSheetLoaded() {
+          console.log("image loaded");
+          drawScreen();
+        }
+
+        function drawScreen() {
+          console.log("render picture);")
+          // render picture to a 500x500 picture
+          // todo: provide a ratio to convert a known conversion
+          // rate between pixel and real measure.
+          context.drawImage(map, 0, 0, canvasWidth, canvasHeight);
+
+          // create a 500xcanvasHeight grid from png picture
+          console.log("calculate grid from picture");
+          // The ImageData.data attribute is a single-dimensional array containing four bytes for every pixel in the ImageData object.
+          var imageData = context.getImageData(0, 0, canvasWidth, canvasHeight);
+          // A separate byte is used to store each of the red, green, blue, and alpha values for each pixel.
+          // Here, a 500x500 pixmap means 500x500x4=1M bytes array.
+          var pix = imageData.data;
+          // walkable cells are coded as 0
+          // walls and obstacles are coded as 1
+          var grid = [];
+          for( var row = 0; row < canvasHeight; row++) {
+            var aRow = [];
+            for (var col = 0 ; col < canvasWidth; col++) {
+              var pos = ((row*(imageData.width*4)) + (col*4));
+              if( pix[(row*canvasWidth + col)*4]      === 0xff &&
+                  pix[(row*canvasWidth + col)*4 + 1 ] === 0xff &&
+                  pix[(row*canvasWidth + col)*4 + 2 ] === 0xff &&
+                  pix[(row*canvasWidth + col)*4 + 3 ] === 0xff) {
+                aRow[col] = 1;
+              }
+              else{
+                aRow[col] = 0;
+              }
+            }
+            grid.push(aRow);
+          }
+/*
+          // a-star test 
+          // col       0  1  2  3  4  5  6
+          var grid = [[1, 0, 1, 1, 1, 1, 1], //row 0
+                      [1, 0, 1, 1, 1, 1, 1],
+                      [1, 0, 1, 1, 1, 1, 1],
+                      [1, 0, 0, 0, 1, 1, 1],
+                      [1, 1, 1, 0, 1, 1, 1],
+                      [1, 1, 1, 0, 1, 1, 1],
+                      [1, 1, 1, 0, 1, 0, 1],
+                      [1, 1, 1, 0, 1, 0, 1],
+                      [1, 1, 1, 1, 1, 0, 1],
+                      [1, 1, 1, 1, 1, 0, 1],
+                      [1, 1, 1, 1, 1, 0, 1]]; // row 10
+*/
+
+
+          var graph = new Graph(grid);
+          // todo: get start and end from mouse pointing
+          var start = graph.nodes[453][104];
+          var end = graph.nodes[59][309];
+          console.log("calculate path, please wait ...");
+          var before = Date.now();
+          var result = astar.search(graph.nodes, start, end, false);
+          var after = Date.now();
+          // result now searches diagonal neighbors as well
+          // result.x = row
+          // result.y = col
+          console.log("done in " + (after - before) + " ms");
+
+          // show path in red
+          var id = context.createImageData(1,1);
+          var d  = id.data;
+          d[0]   = 255;
+          d[1]   = 50;
+          d[2]   = 20;
+          d[3]   = 255;
+
+          for(var i = 0 ; i < result.length; i++) {
+            context.putImageData( id, result[i].y, result[i].x );
+          }
+
+          console.log("end");
+        }
+      }
+
+    </script>
+    <script type="text/javascript" src="astar.js"></script>
+	</body>
+</html>  

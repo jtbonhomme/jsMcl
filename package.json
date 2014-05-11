@@ -1,0 +1,13 @@
+{
+  "name": "jsMcl",
+  "private": false,
+  "description": "Javascript implementation of the Monte Carlo Algorithm for robot localization",
+  "version": "0.0.1",
+  "homepage": "",
+  "author": {
+    "name": "jtbonhomme"
+  },
+  "dependencies": {
+    "express": "~3.4.4"
+  }
+}
