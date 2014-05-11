@@ -38,19 +38,18 @@
           var mousePos = getMousePos(theCanvas, evt);
           var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
           console.log(message);
-          if( typeof start === "undefined" ) {
+          if( typeof start === "undefined" || start === null) {
             start = graph.nodes[mousePos.y][mousePos.x];
-          } else if( typeof end === "undefined" ) {
+          } else if( typeof end === "undefined"  || end === null) {
             end = graph.nodes[mousePos.y][mousePos.x];
             searchPath();
           }
         }
 
         var map = new Image();
-        // map.png shall be a 500x500 picture
-        // walkable color shall be coded as color="#ffffff"
-        // walls shall be coded as color="#000000"
-        // in practical, all colors differents from white are not walkables
+        // map shall be a 500x500 picture
+        // walkable colors shall be coded as white (color="#ffffff")
+        // any other color than white is considered as not walkable
         map.src = "map2.png";
         map.addEventListener('load', eventSheetLoaded , false);
         function eventSheetLoaded() {
@@ -110,28 +109,39 @@
           graph = new Graph(grid);
         }
 
-        function searchPath() {
-          // todo: get start and end from mouse pointing
-          console.log("calculate path, please wait ...");
-          var before = Date.now();
-          var result = astar.search(graph.nodes, start, end, false);
-          // result.x = row
-          // result.y = col
-          var after = Date.now();
-          console.log("done in " + (after - before) + " ms");
+        function showResult(visible, result) {
 
           // show path in red
           var id = context.createImageData(1,1);
           var d  = id.data;
+
           d[0]   = 255;
-          d[1]   = 50;
-          d[2]   = 20;
+          d[1]   = visible ? 0 : 255;
+          d[2]   = visible ? 0 : 255;
           d[3]   = 255;
 
           for(var i = 0 ; i < result.length; i++) {
             context.putImageData( id, result[i].y, result[i].x );
           }
 
+        }
+
+        function searchPath() {
+          console.log("calculate path, please wait ...");
+          var before = Date.now();
+          
+          var result = astar.search(graph.nodes, start, end, false);
+          // n.b.:
+          // result.x = row
+          // result.y = col
+          var after = Date.now();
+          console.log("done in " + (after - before) + " ms");
+          showResult(1, result);
+          setTimeout(function() {
+            showResult(0, result);
+            start = end;
+            end   = null;
+          }, 1000);
           console.log("end");
         }
       }
