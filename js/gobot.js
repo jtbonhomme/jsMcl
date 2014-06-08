@@ -2,6 +2,7 @@
   'use strict';
 
     var mclCtx = global.mclCtx;
+    var mapCtx = global.mapCtx;
 
     function round(n) {
         return Math.round(n * 1000) * .0001;
@@ -230,12 +231,12 @@
             //this.distance = this.range;
             this.distance = 0;
             console.log('ROBOT', robot.x, robot.y, robot.angle);
-            totalAngle = (360 + (this.angle + robot.angle)) % 360;
+            this.totalAngle = (360 + (this.angle + robot.angle)) % 360;
             
-            console.log('total angle', (totalAngle));
+            console.log('total angle', (this.totalAngle));
             this.marker = new Point(
-                (robot.x + this.range * Math.sin(totalAngle * Math.PI / 180)),
-                (robot.y - this.range * Math.cos(totalAngle * Math.PI / 180))
+                (robot.x + this.range * Math.sin(this.totalAngle * Math.PI / 180)),
+                (robot.y - this.range * Math.cos(this.totalAngle * Math.PI / 180))
             );
             
             // laser
@@ -245,7 +246,8 @@
             console.log('laser', robot.x, robot.y, this.marker.x, this.marker.y);
             //var marker = this.marker;
             var distance = this.range;
-            for (var i in map.coordinates) {
+// TODO
+/*            for (var i in map.coordinates) {
                 var prev = map.coordinates[i - 1];
                 var point = map.coordinates[i];
                 if (!prev || !point)
@@ -266,8 +268,8 @@
                 this.distance = distance = round(d);
                 console.log('distance: ' + this.distance);
                 
-            }
-            console.log('angle', totalAngle);
+            }*/
+            console.log('angle', this.totalAngle);
             console.log('distance', this.distance);
             
             // UPDATE PARTICLES
@@ -379,6 +381,7 @@
             this.sensorMeasuring = 0;
         },
         checkTheWall: function(target){
+// TODO
 /*            for (var i in map.coordinates) {
                 var prev = map.coordinates[i - 1];
                 var point = map.coordinates[i];
@@ -464,9 +467,9 @@
         angle: 0,
         weight: 1,
         probability: 1,
+        totalAngle: 0,
         size: 5, 
         sensors: [],
-        totalAngle: 0,
         init: function(x, y, angle, weight, probability) {
             this.x = x; 
             this.y = y; 
@@ -489,17 +492,18 @@
             
             sensor.distance = 0;
             console.log('ROBOT', robot.x, robot.y, robot.angle);
-            totalAngle = (360 + (this.angle + sensor.angle)) % 360;
+            this.totalAngle = (360 + (this.angle + sensor.angle)) % 360;
             
-            console.log('total angle', (totalAngle));
+            console.log('total angle', (this.totalAngle));
             sensor.marker = new Point(
-                (this.x + sensor.range * Math.sin(totalAngle * Math.PI / 180)),
-                (this.y - sensor.range * Math.cos(totalAngle * Math.PI / 180))
+                (this.x + sensor.range * Math.sin(this.totalAngle * Math.PI / 180)),
+                (this.y - sensor.range * Math.cos(this.totalAngle * Math.PI / 180))
             );
             
             var marker = sensor.marker;
             var distance = sensor.range;
-            for (var i in map.coordinates) {
+// TODO
+/*            for (var i in map.coordinates) {
                 var prev = map.coordinates[i - 1];
                 var point = map.coordinates[i];
                 if (!prev || !point)
@@ -519,6 +523,7 @@
                 console.log('sensor distance: ' + sensor.distance);
                 
             }
+            */
             return sensor.distance == sensor.range ? 0 : sensor.distance;
         },
         computeWeights: function(){
@@ -529,6 +534,7 @@
             }
         },
         checkTheWall: function(target){
+// TODO
 /*            for (var i in map.coordinates) {
                 var prev = map.coordinates[i - 1];
                 var point = map.coordinates[i];
@@ -589,9 +595,6 @@
             this.percent = percent;
             for(var i=0; i < count; i++){
                 this.list[i] = new Particle(
-                    //120 + i*15,//Math.nrand(width),
-                    //90 + i*5,//Math.nrand(height),
-                    //0,//Math.nrand(360),
                     Math.nrand(width),
                     Math.nrand(height),
                     Math.nrand(360),
@@ -674,53 +677,7 @@
     // /MONTE CARLO
     // =============================================================================
     // =============================================================================
-    /*
-    function MCL(cell, u, z) {
-        
-        if (u)
-            cell.p = move(cell.p, u);
-        if (z)
-            sense(cell, z);
-        //return Xt;
-    }
 
-    function move(p, move) {
-        return p;
-        var moved = robot.p_cache * 1;
-        var nomoved = p * (1 - 1);
-        return robot.p_cache = (moved + nomoved);
-    }
-
-    function sense(cell, distance) {
-        var marker = new Point(
-            (cell.point.x + distance * Math.sin(robot.angle * Math.PI / 180)),
-            (cell.point.y - distance * Math.cos(robot.angle * Math.PI / 180))
-        );
-        for (var i in map.coordinates) {
-            var prev = map.coordinates[i - 1];
-            var point = map.coordinates[i];
-            if (!prev || !point)
-                continue;
-            
-            var int = lineIntersect(cell.point, marker, prev, point);
-            if (int) {
-                //drawCircle(cell.point, 'rgb(200,0,200)', 5);
-                var d = Math.floor(Math.abs(Math.sqrt(Math.pow(cell.point.x - int.x, 2)
-                                                      + Math.pow(cell.point.y - int.y, 2))));
-                //console.log(cell.point.x, cell.point.y, d, distance);
-                console.log(cell.size);
-                if (d >= (distance - cell.size * .5) && d <= (distance + cell.size * .5)) {
-                    drawCircle(cell.point, 'rgb(0,0,200)', 10);
-                    cell.p += cell.p * .9;
-                    console.log(cell.point.x + 'x' + cell.point.y + ' : ' + cell.p);
-                    return;
-                }
-            }
-            cell.p -= cell.p * .1;
-        }
-    }
-
-    */
 
     var robot, map, particles, iteration, data1, data2;
 
@@ -732,6 +689,7 @@
         data2 = [['Iteration','Weight']];
         document.removeEventListener('update');
         document.removeEventListener('draw');
+        // TODO
         //map = new Map();
         robot = new Robot(
             20,    // ?

@@ -1,7 +1,7 @@
 (function(global) {
   'use strict';
 
-  var FPS = 30;
+  var FPS = 3;
   var canvasWidth   = 500;
   var canvasHeight  = 558;
   var mapCanvas     = document.getElementById("mapCanvas");
@@ -177,6 +177,7 @@
   }
 
   global.mclCtx = mclCtx;
+  global.mapCtx = mapCtx;
   global.canvasWidth = canvasWidth;
   global.canvasHeight = canvasHeight;
 
