@@ -593,10 +593,15 @@
             this.width = width;
             this.height = height;
             this.percent = percent;
+
             for(var i=0; i < count; i++){
+                // find a white pixel in mapCtx
+                var x,y;
+                while( !isWhitePixel(x = Math.nrand(width), y = Math.nrand(height), mapCtx) ) { }
+
                 this.list[i] = new Particle(
-                    Math.nrand(width),
-                    Math.nrand(height),
+                    x,
+                    y,
                     Math.nrand(360),
                     1,
                     1 / count

@@ -62,7 +62,7 @@
     // map shall be a 500x500 picture
     // walkable colors shall be coded as white (color="#ffffff")
     // any other color than white is considered as not walkable
-    map.src = "map3.png";
+    map.src = "map.png";
     map.addEventListener('load', eventSheetLoaded , false);
     function eventSheetLoaded() {
       console.log("image loaded");
