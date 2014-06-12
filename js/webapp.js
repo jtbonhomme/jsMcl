@@ -1,7 +1,7 @@
 (function(global) {
   'use strict';
 
-  var FPS = 3;
+  var FPS = 10;
   var canvasWidth   = 500;
   var canvasHeight  = 558;
   var mapCanvas     = document.getElementById("mapCanvas");
@@ -16,7 +16,7 @@
     "x": 50,
     "y": 50 
   };
-  var angle = 0;
+  var angle = 270; // degre
   // -- temp
 
   var update = new Event("Update");
@@ -34,27 +34,15 @@
   }
 
   function move() {
-    angle = angle + Math.PI / 90;
+    angle = angle + 360 / FPS ;
+    if (angle >= 360)
+      angle = 0;
   }
 
   function render() {
     mclCtx.clearRect(0, 0, canvasWidth, canvasHeight);  
-//    mclCtx.save();
-
-    var id = mclCtx.createImageData(1,1);
-    var d  = id.data;
-
-    d[0]   = 255;
-    d[1]   = 0;
-    d[2]   = 0;
-    d[3]   = 255;
-
-    for(var i = 0 ; i < 50; i++) {
-      var x = Math.round(Math.cos(angle) * i) + orig.x;
-      var y = Math.round(Math.sin(angle) * i) + orig.y;
-      mclCtx.putImageData( id, x, y );
-    }
-//    mclCtx.restore();
+    drawCircle(orig, 'rgba(255, 55, 55, 255)', 20);
+    drawLine3(orig, 20, angle);
   }
 
   function init() {

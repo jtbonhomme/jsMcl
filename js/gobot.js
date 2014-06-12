@@ -31,56 +31,9 @@
     Math.nrand = function(range) {
         return Math.floor(Math.random()* (range + 1));
     };
-
-    function drawLine(begin, end, color, lineWidth) {
-        mclCtx.save();
-        mclCtx.beginPath();
-        mclCtx.moveTo(begin.x, begin.y);
-        mclCtx.lineTo(begin.x, begin.y);
-        mclCtx.lineTo(end.x, end.y);
-        mclCtx.lineWidth = lineWidth || 3;
-        mclCtx.strokeStyle = color || 'rgb(255, 45, 251)';
-        mclCtx.stroke();
-        mclCtx.closePath();
-        mclCtx.restore();
-    }
-
-    function drawLine2(begin, angle, length, color, lineWidth) {
-        angle = ((270 + angle) % 360);
-        var end = {
-            'x': (begin.x + length * Math.cos(angle * Math.PI / 180)),
-            'y': (begin.y + length * Math.sin(angle * Math.PI / 180))
-        };
-        mclCtx.save();
-        mclCtx.beginPath();
-        mclCtx.moveTo(begin.x, begin.y);
-        mclCtx.lineTo(begin.x, begin.y);
-        mclCtx.lineTo(end.x, end.y);
-        mclCtx.lineWidth = lineWidth || 3;
-        mclCtx.strokeStyle = color || 'rgb(255, 45, 251)';
-        mclCtx.stroke();
-        mclCtx.closePath();
-        mclCtx.restore();
-    }
-
-    function drawCircle(center, color, r) {
-        mclCtx.save();
-        mclCtx.beginPath();
-        mclCtx.lineWidth = 0;
-        mclCtx.fillStyle = color || 'rgba(255, 55, 55, 1)';
-        mclCtx.arc(center.x, center.y, (r || 4), 0, 2 * Math.PI, false);
-        mclCtx.fill();
-        mclCtx.closePath();
-        mclCtx.restore();
-    }
-
-    function drawChart(data1, data2) {
-        console.log("data1: "+data1);
-        console.log("data2: "+data2);
-    }
     // INTERSECTIONS
     // =============================================================================
-    function lineIntersect(p1, p2, p3, p4) {
+/*    function lineIntersect(p1, p2, p3, p4) {
         // if the lines intersect, the result contains the x and y of the intersection (treating the lines as infinite) and booleans for whether line segment 1 or line segment 2 contain the point
         var denominator, a, b, numerator1, numerator2, result = {
             x: null,
@@ -105,7 +58,7 @@
         else 
             return false;
         
-    };
+    };*/
 /*    isOnLine = function(p1, p2, p3, tolerate){
         tolerate = tolerate || 7;
         var slope = (p3.y - p2.y) / (p3.x - p2.x);
@@ -140,7 +93,7 @@
     };
     // POINT
     // =============================================================================
-    var Point = new Class({
+/*    var Point = new Class({
         x: 0,
         y: 0,
         init: function(x, y) {
@@ -151,60 +104,7 @@
             return '[' + this.x + ',' + this.y + ']';
         }
     });
-    // MAP
-    // =============================================================================
-    var Map = new Class({
-        coordinates: [],
-        init: function(map) {
-            this.coordinates = [];
-            switch (map) {
-                case '1':
-                    this.coordinates.push(new Point(10, 10));
-                    this.coordinates.push(new Point(630, 10));
-                    this.coordinates.push(new Point(630, 350));
-                    this.coordinates.push(new Point(10, 350));
-                    this.coordinates.push(new Point(10, 10));
-                    break;
-                case '2':
-                    this.coordinates.push(new Point(10, 10));
-                    this.coordinates.push(new Point(130, 10));
-                    this.coordinates.push(new Point(130, 160));
-                    this.coordinates.push(new Point(430, 160));
-                    this.coordinates.push(new Point(430, 10));
-                    this.coordinates.push(new Point(630, 10));
-                    this.coordinates.push(new Point(630, 350));
-                    this.coordinates.push(new Point(10, 350));
-                    this.coordinates.push(new Point(10, 10));
-                    break;
-                case '3':
-                    this.coordinates.push(new Point(10, 10));
-                    this.coordinates.push(new Point(415, 10));
-                    this.coordinates.push(new Point(415, 230));
-                    this.coordinates.push(new Point(425, 230));
-                    this.coordinates.push(new Point(425, 10));
-                    this.coordinates.push(new Point(630, 10));
-                    this.coordinates.push(new Point(630, 350));
-                    this.coordinates.push(new Point(225, 350));
-                    this.coordinates.push(new Point(225, 120));
-                    this.coordinates.push(new Point(215, 120));
-                    this.coordinates.push(new Point(215, 350));
-                    this.coordinates.push(new Point(10, 350));
-                    this.coordinates.push(new Point(10, 10));
-                    break;
-            }
-            console.log('CREATED MAP');
-            document.addEventListener("Update", bind(this, this.update), false);
-            document.addEventListener("Draw", bind(this, this.draw), false);
-        },
-        update: function() {},
-        draw: function() {
-            for(var i in this.coordinates) {
-                if(i>0)
-                    drawLine(this.coordinates[i-1], this.coordinates[i], '#111', 3);
-            };
-        }
-    });
-
+*/
     // SENSOR
     // =============================================================================
     var Sensor = Class({
@@ -230,10 +130,10 @@
             //return distance = range - (noise(noiseVal += noiseScale) * 2);
             //this.distance = this.range;
             this.distance = 0;
-            console.log('ROBOT', robot.x, robot.y, robot.angle);
+            // console.log('ROBOT', robot.x, robot.y, robot.angle);
             this.totalAngle = (360 + (this.angle + robot.angle)) % 360;
             
-            console.log('total angle', (this.totalAngle));
+            // console.log('total angle', (this.totalAngle));
             this.marker = new Point(
                 (robot.x + this.range * Math.sin(this.totalAngle * Math.PI / 180)),
                 (robot.y - this.range * Math.cos(this.totalAngle * Math.PI / 180))
@@ -242,10 +142,11 @@
             // laser
             //drawLine(robot, this.marker, 'rgb(0,255,0)');
             drawLine(robot, this.marker, 'rgba(246, 66, 36, .5)', 3);
-            
-            console.log('laser', robot.x, robot.y, this.marker.x, this.marker.y);
+            // console.log('laser', robot.x, robot.y, this.marker.x, this.marker.y);
             //var marker = this.marker;
-            var distance = this.range;
+            this.distance = getDistance(robot, this.totalAngle, this.range, mapCtx);
+            console.log("sensor distance ["+this.angle+"]= " + this.distance);
+            drawLine3(robot, this.distance, this.totalAngle);
 // TODO
 /*            for (var i in map.coordinates) {
                 var prev = map.coordinates[i - 1];
@@ -266,11 +167,11 @@
                 
                 this.intersection = int;
                 this.distance = distance = round(d);
-                console.log('distance: ' + this.distance);
+                // console.log('distance: ' + this.distance);
                 
             }*/
-            console.log('angle', this.totalAngle);
-            console.log('distance', this.distance);
+            // console.log('totalAngle : ', this.totalAngle);
+            // console.log('distance   : ', this.distance);
             
             // UPDATE PARTICLES
             particles.sense(this.ID, this.angle, this.distance);
@@ -299,9 +200,9 @@
             //mclCtx.rotate((this.angle + robot.angle) * Math.PI / 180);
             //mclCtx.fillRect(115, 115, 10, 10)
             //quad(-5, -5, 5, -5, 5, 5, -5, 5);
-            
+            // todo
             if (measuring) {
-                console.log('angle', robot.angle, this.angle);
+                // console.log('angle', robot.angle, this.angle);
                 this.measure();
                 mclCtx.save();
                 mclCtx.beginPath();
@@ -316,8 +217,8 @@
                 mclCtx.fill();
                 mclCtx.closePath();
                 mclCtx.restore();
-                console.log('measuring', distance);
-                console.log('intersection', intersection.x, intersection.y);
+                // console.log('measuring', this.distance);
+                //console.log('intersection', intersection.x, intersection.y);
             }
             
             if (this.marker) {
@@ -330,7 +231,7 @@
                 mclCtx.closePath();
                 mclCtx.restore();
             }
-            if (this.intersection) {
+            /*if (this.intersection) {
                 mclCtx.save();
                 mclCtx.beginPath();
                 mclCtx.lineWidth = 0;
@@ -339,7 +240,7 @@
                 mclCtx.fill();
                 mclCtx.closePath();
                 mclCtx.restore();
-            }
+            }*/
         }
     });
 
@@ -381,18 +282,10 @@
             this.sensorMeasuring = 0;
         },
         checkTheWall: function(target){
-// TODO
-/*            for (var i in map.coordinates) {
-                var prev = map.coordinates[i - 1];
-                var point = map.coordinates[i];
-                if (!prev || !point)
-                    continue;
-                var int = lineIntersect(robot, target, prev, point);
-                if(int)
-                    return true;            
-            }
-*/
-            return false;
+            if( isWhitePixel(target, mapCtx) ) 
+                return false;
+            else
+                return true;
         },
         go: function(step) {
             var target = new Point( 
@@ -405,7 +298,7 @@
             }
         },
         turn: function(angle) {
-            console.log('* angle: ' + this.angle);
+            // console.log('* angle: ' + this.angle);
             this.angle += BoxMuller.random(angle, robot.noise);
             this.angle = (360 + (this.angle)) % 360;
             
@@ -486,15 +379,15 @@
         },
         addSensor: function(i, angle, range, noise) {
             this.sensors[i] = {'angle': angle, 'range': range, 'noise':noise, 'distance':0};
-            console.log('SENSORS', i, angle, range);
+            // console.log('SENSORS', i, angle, range);
         },
         getDistance: function(sensor) {
             
             sensor.distance = 0;
-            console.log('ROBOT', robot.x, robot.y, robot.angle);
+            // console.log('ROBOT', robot.x, robot.y, robot.angle);
             this.totalAngle = (360 + (this.angle + sensor.angle)) % 360;
             
-            console.log('total angle', (this.totalAngle));
+            // console.log('total angle', (this.totalAngle));
             sensor.marker = new Point(
                 (this.x + sensor.range * Math.sin(this.totalAngle * Math.PI / 180)),
                 (this.y - sensor.range * Math.cos(this.totalAngle * Math.PI / 180))
@@ -502,6 +395,7 @@
             
             var marker = sensor.marker;
             var distance = sensor.range;
+            sensor.distance = getDistance(marker, this.totalAngle, sensor.range, mapCtx);
 // TODO
 /*            for (var i in map.coordinates) {
                 var prev = map.coordinates[i - 1];
@@ -520,7 +414,7 @@
                 
                 sensor.intersection = int;
                 sensor.distance = distance = round(d);
-                console.log('sensor distance: ' + sensor.distance);
+                // console.log('sensor distance: ' + sensor.distance);
                 
             }
             */
@@ -530,22 +424,14 @@
             for(var i in this.sensors){
                 this.sensors[i].distance = this.getDistance(this.sensors[i]);
                 this.weight *= Gaussian.weight(robot.sensors[i].distance, 1, this.sensors[i].distance);
-                console.log('DISTANCE '+ this.sensors[i].distance);
+                // console.log('DISTANCE '+ this.sensors[i].distance);
             }
         },
         checkTheWall: function(target){
-// TODO
-/*            for (var i in map.coordinates) {
-                var prev = map.coordinates[i - 1];
-                var point = map.coordinates[i];
-                if (!prev || !point)
-                    continue;
-                var int = lineIntersect(this, target, prev, point);
-                if(int)
-                    return true;            
-            }
-*/
-            return false;
+            if( isWhitePixel(target, mapCtx) ) 
+                return false;
+            else
+                return true;
         },
         go: function(step) {
             var target = new Point( 
@@ -596,12 +482,12 @@
 
             for(var i=0; i < count; i++){
                 // find a white pixel in mapCtx
-                var x,y;
-                while( !isWhitePixel(x = Math.nrand(width), y = Math.nrand(height), mapCtx) ) { }
+                var p;
+                while( !isWhitePixel(p = new Point( Math.nrand(width), Math.nrand(height)), mapCtx) ) { }
 
                 this.list[i] = new Particle(
-                    x,
-                    y,
+                    p.x,
+                    p.y,
                     Math.nrand(360),
                     1,
                     1 / count
@@ -620,15 +506,15 @@
                 if(this.list[i] instanceof Particle)
                     totalWeight += this.list[i].weight;
             totalWeight == round(totalWeight);
-            console.log('TOTAL WEIGHT: ' + totalWeight);
-            console.log('PARTICLE COUNT: ' + this.list.length);
+            // console.log('TOTAL WEIGHT: ' + totalWeight);
+            // console.log('PARTICLE COUNT: ' + this.list.length);
             var highWeightParticle = {'weight':0};
             for(var i in this.list)
                 if(this.list[i] instanceof Particle){
                     this.list[i].weight = this.list[i].weight / totalWeight;
                     if(highWeightParticle.weight < this.list[i].weight)
                         highWeightParticle = this.list[i];
-                    console.log('PARTICLE Normalize Weight: ' +  this.list[i].weight);
+                    // console.log('PARTICLE Normalize Weight: ' +  this.list[i].weight);
                 }
             
             // sort particles
@@ -652,7 +538,7 @@
             var d = Math.abs(Math.sqrt(Math.pow(robot.x - this.list[0].x, 2)
                                        + Math.pow(robot.y - this.list[0].y, 2)));
             drawLine(robot, this.list[0], '#0f0', 1);
-            console.log('distance: ' + d);
+            // console.log('distance: ' + d);
             
             // visualiton data
             data1.push([++iteration, d]);
@@ -662,7 +548,7 @@
         update: function() {
             if (key.space === 'up') {
                 //this.readSensors();
-                console.log('space up','calculate');
+                // console.log('space up','calculate');
                 key.space = 0;
                 for(var i in this.list)
                     if(this.list[i] instanceof Particle){
@@ -673,10 +559,6 @@
         }
     });
 
-
-
-
-
     // =============================================================================
     // =============================================================================
     // /MONTE CARLO
@@ -684,18 +566,16 @@
     // =============================================================================
 
 
-    var robot, map, particles, iteration, data1, data2;
+    var robot, particles, iteration, data1, data2;
 
     function generate() {
-        console.log('GENERATE');
+        // console.log('GENERATE');
         
         iteration = 0;
         data1 = [['Iteration','Distance']];
         data2 = [['Iteration','Weight']];
         document.removeEventListener('update');
         document.removeEventListener('draw');
-        // TODO
-        //map = new Map();
         robot = new Robot(
             20,    // ?
             100,   // x
@@ -708,21 +588,21 @@
         robot.addSensor(
             new Sensor(robot.sensors.length, 5,
                0,    //angle
-               200,  // range
+               100,  // range
                0.5   // noise
         ));
 
         robot.addSensor(
             new Sensor(robot.sensors.length, 5,
                90,   //angle
-               200,  // range
+               100,  // range
                0.5   // noise
         ));
 
         robot.addSensor(
             new Sensor(robot.sensors.length, 5,
                -90,  //angle
-               200,  // range
+               100,  // range
                0.5   // noise
         ));
         
