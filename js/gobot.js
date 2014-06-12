@@ -462,8 +462,8 @@
         },
         draw: function() {
             drawLine2(this, this.angle, this.size+1, 'rgba(0,155,155,.8)', 1);
-            //drawCircle(this, 'rgba(255,155,155,'+this.weight+')', this.size)
-            drawCircle(this, 'rgba(255,155,155,.5)', this.size)
+            drawCircle(this, 'rgba(255,155,155,'+this.weight+')', this.size)
+            //drawCircle(this, 'rgba(255,155,155,.5)', this.size)
         },
         toString: function(){
             return '[' + this.x + ',' + this.y + ']';

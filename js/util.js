@@ -101,11 +101,34 @@ function drawCircle(center, color, r) {
     mclCtx.restore();
 }
 
-function drawChart(data1, data2) {
-    // console.log("data1: "+data1);
-    // console.log("data2: "+data2);
-}
+// =============================================================================
+// GOOGLE VISUALITION
+// =============================================================================
+google.load('visualization', '1', {packages: ['corechart']});
 
+function drawChart(data1, data2) {
+    // Create and draw the visualization.
+    var ac = new google.visualization.LineChart(document.getElementById('visualization1'));
+    ac.draw(google.visualization.arrayToDataTable(data1), {
+        title : '',
+        //isStacked: true,
+        legend: { position: 'bottom' },
+        width: 525,
+        height: 300,
+        vAxis: {title: "Distance"},
+        hAxis: {title: "Iteration"}
+    });
+    var ac = new google.visualization.LineChart(document.getElementById('visualization2'));
+    ac.draw(google.visualization.arrayToDataTable(data2), {
+        title : '',
+        //isStacked: true,
+        legend: { position: 'bottom' },
+        width: 525,
+        height: 300,
+        vAxis: {title: "Weight"},
+        hAxis: {title: "Iteration"}
+    });
+}
 
 // POINT
 // =============================================================================
